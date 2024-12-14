@@ -1,0 +1,1 @@
+docker run --name chain-of-thought-ABSA --gpus all -dit -v /media/khanh/projects2/ABSA/chain-of-thought-ABSA:/chain-of-thought-ABSA pytorch/pytorch:2.5.1-cuda12.4-cudnn9-devel

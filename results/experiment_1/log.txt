@@ -1,0 +1,167 @@
+train_model(
+    model = T5ForConditionalGeneration.from_pretrained("t5-base"), 
+    tokenizer = T5Tokenizer.from_pretrained("t5-base"), 
+    train_data = process_train_data("/chain-of-thought-ABSA/data/acos/rest16/train.txt"),
+    validation_data = process_validation_data("/chain-of-thought-ABSA/data/acos/rest16/dev.txt"),
+    num_epochs = 1000,
+    batch_size = 16, 
+    lr = 3e-5,
+)
+
+def remove_after_eos(output_ids):
+    cleaned_output = []
+    for sequence in output_ids:
+        eos_position = (sequence == 1).nonzero(as_tuple=True)[0]
+        if len(eos_position) > 0:  # Nếu tìm thấy <EOS>
+            cleaned_output.append(sequence[: eos_position[0]])  # Giữ lại từ đầu đến trước <EOS>
+        else:
+            cleaned_output.append(sequence)  # Không có <EOS>, giữ nguyên
+    return cleaned_output
+
+# Hàm huấn luyện
+def train_model(model, tokenizer, train_data, validation_data, num_epochs, batch_size, lr):
+    no_improve_epochs = 0
+    best_f1 = 0
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
+    dataloader = build_dataloader(train_data=train_data, q = 0.5, batch_size=batch_size, tokenizer=tokenizer)
+    optimizer = AdamW(model.parameters(), lr=lr)
+    for epoch in range(num_epochs):
+        torch.cuda.empty_cache()
+        print(f"Epoch {epoch + 1}/{num_epochs}")
+        # Huấn luyện #########################################################################################################################################
+        print("Training")
+        model.train()
+        total_loss = 0
+        for batch in dataloader:
+            outputs = model(
+                input_ids=batch["input_ids"].to(device), 
+                attention_mask=batch["attention_mask"].to(device), 
+                labels=batch["labels"].to(device))
+            loss = outputs.loss
+            loss.backward()
+            optimizer.step()
+            optimizer.zero_grad()
+            total_loss += loss.item()
+            # Lưu dự đoán vào train_tasks nếu random.random() < 1 - q
+            if random.random() < 0.5:
+                output_ids = torch.argmax(outputs.logits, dim=-1)
+                output_ids = remove_after_eos(output_ids)
+                for key, prediction in zip(batch["batch_keys"], tokenizer.batch_decode(output_ids, skip_special_tokens=True)):
+                    train_data[key]["text_predict"] = prediction
+                    
+        print(f"Epoch {epoch + 1} finished with loss: {total_loss / len(dataloader):.4f}")
+        # Đánh giá #########################################################################################################################################
+        print("Evaluating")
+        model.eval()
+        precision, recall, f1 = evaluate_pipeline_batch(model, tokenizer, validation_data, device, batch_size = batch_size)
+        print("precision = ", precision,"recall = ", recall,"f1 = ", f1)
+        if(f1 > best_f1):
+            no_improve_epochs = 0
+            best_f1 = f1
+            # Lưu model
+            torch.save(model.state_dict(), f"/chain-of-thought-ABSA/results/experiment_2/{epoch + 1}.pt")
+            print("best_f1 = ", best_f1)
+        else:
+            # if (q <= 0):
+            #     print("Huấn huyện xong")
+            #     break
+            # q = q - q_sped
+            # print("q = ", q)
+            # dataloader = build_dataloader(train_data=train_data, q = q, batch_size=batch_size, tokenizer=tokenizer)
+            no_improve_epochs = no_improve_epochs + 1
+            if no_improve_epochs == 5:
+                print("Huấn huyện xong")
+                break
+
+Epoch 1/1000
+Training
+Passing a tuple of `past_key_values` is deprecated and will be removed in Transformers v4.48.0. You should pass an instance of `EncoderDecoderCache` instead, e.g. `past_key_values=EncoderDecoderCache.from_legacy_cache(past_key_values)`.
+Epoch 1 finished with loss: 0.8129
+Evaluating
+precision =  0.4155844155844156 recall =  0.36923076923076925 f1 =  0.39103869653767825
+best_f1 =  0.39103869653767825
+Epoch 2/1000
+Training
+Epoch 2 finished with loss: 0.3206
+Evaluating
+precision =  0.5398230088495575 recall =  0.46923076923076923 f1 =  0.5020576131687243
+best_f1 =  0.5020576131687243
+Epoch 3/1000
+Training
+Epoch 3 finished with loss: 0.2367
+Evaluating
+precision =  0.49586776859504134 recall =  0.46153846153846156 f1 =  0.47808764940239046
+Epoch 4/1000
+Training
+Epoch 4 finished with loss: 0.1826
+Evaluating
+precision =  0.5355648535564853 recall =  0.49230769230769234 f1 =  0.5130260521042084
+best_f1 =  0.5130260521042084
+Epoch 5/1000
+Training
+Epoch 5 finished with loss: 0.1434
+Evaluating
+precision =  0.5261044176706827 recall =  0.5038461538461538 f1 =  0.5147347740667977
+best_f1 =  0.5147347740667977
+Epoch 6/1000
+Training
+Epoch 6 finished with loss: 0.1172
+Evaluating
+precision =  0.5591836734693878 recall =  0.5269230769230769 f1 =  0.5425742574257427
+best_f1 =  0.5425742574257427
+Epoch 7/1000
+Training
+Epoch 7 finished with loss: 0.0978
+Evaluating
+precision =  0.5889830508474576 recall =  0.5346153846153846 f1 =  0.560483870967742
+best_f1 =  0.560483870967742
+Epoch 8/1000
+Training
+Epoch 8 finished with loss: 0.0809
+Evaluating
+precision =  0.5753968253968254 recall =  0.5576923076923077 f1 =  0.56640625
+best_f1 =  0.56640625
+Epoch 9/1000
+Training
+Epoch 9 finished with loss: 0.0697
+Evaluating
+precision =  0.6074380165289256 recall =  0.5653846153846154 f1 =  0.5856573705179282
+best_f1 =  0.5856573705179282
+Epoch 10/1000
+Training
+Epoch 10 finished with loss: 0.0604
+Evaluating
+precision =  0.58 recall =  0.5576923076923077 f1 =  0.5686274509803922
+Epoch 11/1000
+Training
+Epoch 11 finished with loss: 0.0513
+Evaluating
+precision =  0.6333333333333333 recall =  0.5846153846153846 f1 =  0.608
+best_f1 =  0.608
+Epoch 12/1000
+Training
+Epoch 12 finished with loss: 0.0450
+Evaluating
+precision =  0.6307053941908713 recall =  0.5846153846153846 f1 =  0.6067864271457085
+Epoch 13/1000
+Training
+Epoch 13 finished with loss: 0.0396
+Evaluating
+precision =  0.6090534979423868 recall =  0.5692307692307692 f1 =  0.588469184890656
+Epoch 14/1000
+Training
+Epoch 14 finished with loss: 0.0363
+Evaluating
+precision =  0.592 recall =  0.5692307692307692 f1 =  0.580392156862745
+Epoch 15/1000
+Training
+Epoch 15 finished with loss: 0.0327
+Evaluating
+precision =  0.6 recall =  0.5769230769230769 f1 =  0.5882352941176471
+Epoch 16/1000
+Training
+Epoch 16 finished with loss: 0.0286
+Evaluating
+precision =  0.583011583011583 recall =  0.5807692307692308 f1 =  0.581888246628131
+Huấn huyện xong

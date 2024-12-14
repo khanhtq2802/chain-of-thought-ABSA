@@ -1,0 +1,217 @@
+train_model(
+    model = T5ForConditionalGeneration.from_pretrained("t5-base"), 
+    tokenizer = T5Tokenizer.from_pretrained("t5-base"), 
+    train_data = process_train_data("/chain-of-thought-ABSA/data/acos/laptop16/train.txt"),
+    validation_data = process_validation_data("/chain-of-thought-ABSA/data/acos/laptop16/dev.txt"),
+    num_epochs = 1000,
+    batch_size = 16, 
+    lr = 3e-5,
+    q_sped = 0.05)
+
+q = 1 -> 0
+p = 1 - q
+
+Epoch 1/1000
+Training
+Passing a tuple of `past_key_values` is deprecated and will be removed in Transformers v4.48.0. You should pass an instance of `EncoderDecoderCache` instead, e.g. `past_key_values=EncoderDecoderCache.from_legacy_cache(past_key_values)`.
+Epoch 1 finished with loss: 0.6304
+Evaluating
+precision =  0.2630208333333333 recall =  0.23006833712984054 f1 =  0.2454434993924666
+best_f1 =  0.2454434993924666
+Epoch 2/1000
+Training
+Epoch 2 finished with loss: 0.2458
+Evaluating
+precision =  0.33663366336633666 recall =  0.3097949886104784 f1 =  0.3226571767497035
+best_f1 =  0.3226571767497035
+Epoch 3/1000
+Training
+Epoch 3 finished with loss: 0.1875
+Evaluating
+precision =  0.3853904282115869 recall =  0.34851936218678814 f1 =  0.36602870813397126
+best_f1 =  0.36602870813397126
+Epoch 4/1000
+Training
+Epoch 4 finished with loss: 0.1521
+Evaluating
+precision =  0.4235294117647059 recall =  0.41002277904328016 f1 =  0.41666666666666663
+best_f1 =  0.41666666666666663
+Epoch 5/1000
+Training
+Epoch 5 finished with loss: 0.1279
+Evaluating
+precision =  0.44755244755244755 recall =  0.43735763097949887 f1 =  0.4423963133640553
+best_f1 =  0.4423963133640553
+Epoch 6/1000
+Training
+Epoch 6 finished with loss: 0.1066
+Evaluating
+precision =  0.4326241134751773 recall =  0.4168564920273349 f1 =  0.4245939675174014
+q =  0.95
+Epoch 7/1000
+Training
+Epoch 7 finished with loss: 0.0949
+Evaluating
+precision =  0.4410377358490566 recall =  0.42596810933940776 f1 =  0.43337195828505215
+q =  0.8999999999999999
+Epoch 8/1000
+Training
+Epoch 8 finished with loss: 0.0843
+Evaluating
+precision =  0.45454545454545453 recall =  0.44419134396355353 f1 =  0.4493087557603687
+best_f1 =  0.4493087557603687
+Epoch 9/1000
+Training
+Epoch 9 finished with loss: 0.0746
+Evaluating
+precision =  0.4485981308411215 recall =  0.43735763097949887 f1 =  0.4429065743944636
+q =  0.8499999999999999
+Epoch 10/1000
+Training
+Epoch 10 finished with loss: 0.0649
+Evaluating
+precision =  0.43207126948775054 recall =  0.4419134396355353 f1 =  0.4369369369369369
+q =  0.7999999999999998
+Epoch 11/1000
+Training
+Epoch 11 finished with loss: 0.0581
+Evaluating
+precision =  0.4467120181405896 recall =  0.44874715261959 f1 =  0.44772727272727275
+q =  0.7499999999999998
+Epoch 12/1000
+Training
+Epoch 12 finished with loss: 0.0531
+Evaluating
+precision =  0.4527027027027027 recall =  0.45785876993166286 f1 =  0.4552661381653454
+best_f1 =  0.4552661381653454
+Epoch 13/1000
+Training
+Epoch 13 finished with loss: 0.0458
+Evaluating
+precision =  0.45871559633027525 recall =  0.45558086560364464 f1 =  0.45714285714285713
+best_f1 =  0.45714285714285713
+Epoch 14/1000
+Training
+Epoch 14 finished with loss: 0.0423
+Evaluating
+precision =  0.43429844097995546 recall =  0.44419134396355353 f1 =  0.43918918918918926
+q =  0.6999999999999997
+Epoch 15/1000
+Training
+Epoch 15 finished with loss: 0.0392
+Evaluating
+precision =  0.4457013574660634 recall =  0.44874715261959 f1 =  0.44721906923950056
+q =  0.6499999999999997
+Epoch 16/1000
+Training
+Epoch 16 finished with loss: 0.0341
+Evaluating
+precision =  0.452914798206278 recall =  0.4601366742596811 f1 =  0.45649717514124294
+q =  0.5999999999999996
+Epoch 17/1000
+Training
+Epoch 17 finished with loss: 0.0309
+Evaluating
+precision =  0.46543778801843316 recall =  0.4601366742596811 f1 =  0.4627720504009164
+best_f1 =  0.4627720504009164
+Epoch 18/1000
+Training
+Epoch 18 finished with loss: 0.0288
+Evaluating
+precision =  0.45727482678983833 recall =  0.4510250569476082 f1 =  0.4541284403669725
+q =  0.5499999999999996
+Epoch 19/1000
+Training
+Epoch 19 finished with loss: 0.0258
+Evaluating
+precision =  0.4588235294117647 recall =  0.44419134396355353 f1 =  0.45138888888888884
+q =  0.4999999999999996
+Epoch 20/1000
+Training
+Epoch 20 finished with loss: 0.0238
+Evaluating
+precision =  0.449438202247191 recall =  0.45558086560364464 f1 =  0.45248868778280543
+q =  0.4499999999999996
+Epoch 21/1000
+Training
+Epoch 21 finished with loss: 0.0206
+Evaluating
+precision =  0.4209354120267261 recall =  0.4305239179954442 f1 =  0.4256756756756757
+q =  0.39999999999999963
+Epoch 22/1000
+Training
+Epoch 22 finished with loss: 0.0195
+Evaluating
+precision =  0.46774193548387094 recall =  0.4624145785876993 f1 =  0.4650630011454754
+best_f1 =  0.4650630011454754
+Epoch 23/1000
+Training
+Epoch 23 finished with loss: 0.0173
+Evaluating
+precision =  0.43115124153498874 recall =  0.43507972665148065 f1 =  0.4331065759637189
+q =  0.34999999999999964
+Epoch 24/1000
+Training
+Epoch 24 finished with loss: 0.0169
+Evaluating
+precision =  0.46882217090069284 recall =  0.4624145785876993 f1 =  0.46559633027522934
+best_f1 =  0.46559633027522934
+Epoch 25/1000
+Training
+Epoch 25 finished with loss: 0.0151
+Evaluating
+precision =  0.4756380510440835 recall =  0.46697038724373574 f1 =  0.47126436781609193
+best_f1 =  0.47126436781609193
+Epoch 26/1000
+Training
+Epoch 26 finished with loss: 0.0145
+Evaluating
+precision =  0.4748858447488584 recall =  0.47380410022779046 f1 =  0.4743443557582669
+best_f1 =  0.4743443557582669 q = 0.35 p = 0.65 #######################################################
+Epoch 27/1000
+Training
+Epoch 27 finished with loss: 0.0129
+Evaluating
+precision =  0.4675925925925926 recall =  0.4601366742596811 f1 =  0.4638346727898967
+q =  0.29999999999999966
+Epoch 28/1000
+Training
+Epoch 28 finished with loss: 0.0120
+Evaluating
+precision =  0.44907407407407407 recall =  0.4419134396355353 f1 =  0.4454649827784156
+q =  0.24999999999999967
+Epoch 29/1000
+Training
+Epoch 29 finished with loss: 0.0118
+Evaluating
+precision =  0.4426605504587156 recall =  0.4396355353075171 f1 =  0.4411428571428571
+q =  0.19999999999999968
+Epoch 30/1000
+Training
+Epoch 30 finished with loss: 0.0103
+Evaluating
+precision =  0.4631336405529954 recall =  0.45785876993166286 f1 =  0.4604810996563573
+q =  0.1499999999999997
+Epoch 31/1000
+Training
+Epoch 31 finished with loss: 0.0099
+Evaluating
+precision =  0.4446902654867257 recall =  0.45785876993166286 f1 =  0.45117845117845123
+q =  0.09999999999999969
+Epoch 32/1000
+Training
+Epoch 32 finished with loss: 0.0097
+Evaluating
+precision =  0.448512585812357 recall =  0.44646924829157175 f1 =  0.4474885844748859
+q =  0.049999999999999684
+Epoch 33/1000
+Training
+Epoch 33 finished with loss: 0.0088
+Evaluating
+precision =  0.4627906976744186 recall =  0.4533029612756264 f1 =  0.4579976985040276
+q =  -3.191891195797325e-16
+Epoch 34/1000
+Training
+Epoch 34 finished with loss: 0.0090
+Evaluating
+precision =  0.43946188340807174 recall =  0.44646924829157175 f1 =  0.4429378531073447
